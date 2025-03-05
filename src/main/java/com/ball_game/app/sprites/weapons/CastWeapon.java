@@ -7,6 +7,7 @@ public class CastWeapon extends DrawableWeapon{
     double slope;
     double y_intercept;
     boolean move_positive;
+    int size = 10;
 
     public CastWeapon(int x, int y, int momentum, int end_x, int end_y){
         super(x,y,momentum);
@@ -15,7 +16,7 @@ public class CastWeapon extends DrawableWeapon{
     }
 
     public void draw(Graphics g){
-        g.drawRoundRect(x, y, 10, 10, 3, 3);
+        g.drawRoundRect(x, y, size, size, 3, 3);
     }
 
     public void update(){
@@ -25,7 +26,6 @@ public class CastWeapon extends DrawableWeapon{
         temp_y = slope*xval + y_intercept;
         y = (int)temp_y;
         x = (int)temp_x;
-        System.out.println(String.format("weapon x: %d   y:%d", x, y));
     }
 
     private void find_move_directions(int end_x , int end_y){

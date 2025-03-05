@@ -11,9 +11,9 @@ public class ButtonCreator {
         Color new_color = new Color(color_data.r+50,color_data.g+50,color_data.b+50);
         
         JButton new_button = new JButton(label);
-        new_button.setFocusable(true);
         new_button.setBackground(new_color);
         new_button.addActionListener(action_listener);
+        new_button.setFocusable(false);
         return new_button;
     }
 }

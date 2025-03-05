@@ -7,15 +7,19 @@ import com.ball_game.app.sprites.weapons.*;
 
 public class Weapon {
 
+    private final int damage_reset_cooldown_threshold = 25;
+
     private int x;
     private int y;
-    private int momentum = 10;
+    private int momentum = 5;
     private int end_x = 0;
     private int end_y = 0;
     private int level;
     private int damage;
+    private int damage_reset_cooldown_count;
     private String name;
     private String weapon_type;
+    private boolean delt_damage = false;
     private DrawableWeapon draw_weapon;
 
     public Weapon(int caster_x, int caster_y, int character_x, int character_y, int level, int damage, String name, String weapon_type) {
@@ -54,7 +58,31 @@ public class Weapon {
         return name;
     }
 
-    public Point getLocation(){
+    public Point getLocation() {
         return draw_weapon.getLocation();
+    }
+
+    public int getWeaponSize(){
+        return draw_weapon.size;
+    }
+
+    public boolean hasDealtDamage(){
+        return delt_damage;
+    }
+
+    public void setDeltDamage(boolean delt_damage){
+        this.delt_damage = delt_damage;
+        if (this.delt_damage) {
+            this.damage_reset_cooldown_count = this.damage_reset_cooldown_threshold;
+        }
+    }
+
+    public void decreaseCooldowns(){
+        if (this.damage_reset_cooldown_count > 0){
+            this.damage_reset_cooldown_count--;
+        }
+        if (this.damage_reset_cooldown_count == 0){
+            this.delt_damage = false;
+        }
     }
 }

@@ -4,6 +4,7 @@ import java.awt.*;
 
 import com.ball_game.app.ApiInterfaces.containers.EnemyDataContainer;
 import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
+import com.ball_game.app.sprites.Character;
 
 public class Enemy {
     String name;
@@ -12,16 +13,18 @@ public class Enemy {
     int y;
     boolean weapon_ready;
     WeaponDataContainer wdc;
+    Character character_ref;
     Weapon current_weapon = null;
     int size;
-    int momentum = 3;
+    int momentum = 1;
 
     public Enemy(){}
 
-    public Enemy(double start_x, double start_y, EnemyDataContainer edc){
+    public Enemy(double start_x, double start_y, Character character_ref, EnemyDataContainer edc){
         this.x = (int)start_x;
         this.y = (int)start_y;
         this.weapon_ready = true;
+        this.character_ref = character_ref;
         this.size = edc.getSpriteSize();
         this.name = edc.getName();
         this.level = edc.getLevel();
@@ -66,6 +69,41 @@ public class Enemy {
     private void draw_weapon(Graphics g){
         if (current_weapon != null){
             current_weapon.draw(g);
+            checkForDamage();
+        } 
+    }
+
+    private void checkForDamage(){
+        Point weapon_location = current_weapon.getLocation();
+        Point character_location = character_ref.getLocation();
+
+        int weapon_x = (int)weapon_location.getX();
+        int weapon_y = (int)weapon_location.getY();
+
+        int end_weapon_x = weapon_x + getWeaponSize();
+        int end_weapon_y = weapon_y + getWeaponSize();
+
+        int character_x = (int)character_location.getX();
+        int character_y = (int)character_location.getY();
+
+        int end_char_x = character_x + character_ref.size;
+        int end_char_y = character_y + character_ref.size;
+
+        boolean takes_damage = true;
+
+        if(end_weapon_x < character_x || end_char_x < weapon_x){
+            takes_damage = false;
+        }
+        else if (end_weapon_y < character_y || end_char_y < weapon_y){
+            takes_damage = false;
+        }
+
+        if(takes_damage && !current_weapon.hasDealtDamage()){
+            character_ref.takeDamage(level);
+            current_weapon.setDeltDamage(true);
+        }
+        else {
+            current_weapon.decreaseCooldowns();
         }
     }
 
@@ -81,5 +119,9 @@ public class Enemy {
         System.out.println("weapon cleaned up!");
         this.current_weapon = null;
         this.weapon_ready = true;
+    }
+
+    public int getWeaponSize(){
+        return this.current_weapon.getWeaponSize();
     }
 }

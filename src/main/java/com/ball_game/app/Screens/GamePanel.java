@@ -4,21 +4,28 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.ball_game.app.ApiInterfaces.ApiTransaction;
+import com.ball_game.app.ApiInterfaces.containers.EnemyDataContainer;
+import com.ball_game.app.ApiInterfaces.containers.SpritesDataContainer;
 import com.ball_game.app.sprites.Character;
 import com.ball_game.app.util.*;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
-    int x_dem = 800;
-    int y_dem = 600;
-    private final int DELAY = 25;
+    private InfoPanel info_panel;
+    private final int DELAY = 15;
     private Timer timer;
     Character main_character;
-    EnemyList enemy_list = new EnemyList(x_dem, y_dem);
+    ApiTransaction<SpritesDataContainer> sprite_container;
+    EnemyList enemy_list = new EnemyList(SwingData.getInstance().getX(), SwingData.getInstance().getY());
 
     public GamePanel(){
-        main_character = new Character(x_dem, y_dem, 50, 5);
-        setPreferredSize(new Dimension(x_dem, y_dem));
+        getBackgroundImages();
+        main_character = new Character(SwingData.getInstance().getX(), SwingData.getInstance().getY(),
+                                        50, 5);
+        setPreferredSize(new Dimension(SwingData.getInstance().getX(), SwingData.getInstance().getY()));
+        info_panel = new InfoPanel("test_player", main_character.health, main_character.level);
+        this.add(info_panel);
         enemy_list.createEnemies(main_character);
         timer = new Timer(DELAY, this);
         timer.start();
@@ -30,7 +37,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
         if (ekc==KeyEvent.VK_W || ekc==KeyEvent.VK_A || ekc==KeyEvent.VK_D || ekc==KeyEvent.VK_S){
             main_character.keyPressed(e);
-            enemy_list.chase(main_character.x, main_character.y);
         }
         repaint();
     }
@@ -46,10 +52,32 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         super.paintComponent(g);
         main_character.draw(g);
         enemy_list.draw(g);
+        enemy_list.chase();
+        info_panel.updateHealth(main_character.health);
+        checkPlayerHealth();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
+    }
+
+    private void checkPlayerHealth(){
+        if (main_character.health == 0) {
+            launchEndScreen();
+        }
+    }
+
+    private void launchEndScreen(){
+        System.out.println("game ended");
+        System.exit(0);
+    }
+
+    private void getBackgroundImages(){
+        this.sprite_container = new ApiTransaction<SpritesDataContainer>(
+                                                                    "get",
+                                                                    ApiData.getInstance().getHost() + "/sprites/contains/game_background",
+                                                                    SpritesDataContainer.class
+                                                                    );
     }
 }

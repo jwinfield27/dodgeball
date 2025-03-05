@@ -8,6 +8,7 @@ public class  DrawableWeapon {
     protected int x;
     protected int y;
     protected int momentum;
+    public int size = 0; // overridden by implementing class
 
     public DrawableWeapon(int x, int y, int momentum) {
         this.x = x;

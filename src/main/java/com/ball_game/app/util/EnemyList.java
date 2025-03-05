@@ -45,7 +45,7 @@ public class EnemyList {
     private Optional<EnemyDataContainer> getEnemyInfoByLevel(int level){
         ApiTransaction<EnemyDataContainer> enemy_container = new ApiTransaction<EnemyDataContainer>(
                                                                     "get",
-                                                                    "http://127.0.0.1:8080/enemy/level/random/5",
+                                                                    ApiData.getInstance().getHost() + "/enemy/level/random/5",
                                                                     EnemyDataContainer.class
                                                                     );
         EnemyDataContainer edc;
@@ -75,7 +75,7 @@ public class EnemyList {
     }
 
     private Optional<WeaponDataContainer> getWeaponDataById(int id){
-        String get_weapon_base_string = "http://127.0.0.1:8080/weapon/" + String.valueOf(id);
+        String get_weapon_base_string = ApiData.getInstance().getHost() + "/weapon/" + String.valueOf(id);
         ApiTransaction<WeaponDataContainer> weapon_container = new ApiTransaction<WeaponDataContainer>(
             "get",
             get_weapon_base_string,
@@ -104,9 +104,10 @@ public class EnemyList {
         return enemies;
     }
 
-    public void chase(int character_x, int character_y){
+    public void chase(){
+        Point character_location = main_character.getLocation();
         for (Enemy e : enemies){
-            e.chase(character_x, character_y);
+            e.chase((int)character_location.getX(), (int)character_location.getY());
         }
         for (Enemy e : enemies){
             String weapon_type = e.get_weapon_type().strip();
@@ -114,8 +115,6 @@ public class EnemyList {
                 Point weapon_position = e.get_weapon_position();
                 int weapon_x = (int)weapon_position.getX();
                 int weapon_y = (int)weapon_position.getY();
-                System.out.println(weapon_x);
-                System.out.println(weapon_y);
                 if (weapon_x < 0 || weapon_y < 0 || weapon_x > util.screen_x || weapon_y > util.screen_y){
                     e.cleanup_weapon();
                 }

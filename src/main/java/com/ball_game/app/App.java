@@ -12,13 +12,9 @@ import javax.swing.*;
 
 public class App {
 
-    int x_length = 800;
-    int y_length = 600;
     JFrame frame;
     JPanel panel;
     JLabel menu_label;
-
-    GameScreen gameScreen;
 
     public App() {
         frame = new JFrame();
@@ -38,7 +34,7 @@ public class App {
     private void createAndShowGui() {
         ApiTransaction<MenuDataContainer> menu_data = new ApiTransaction<MenuDataContainer>(
                                                         "get",
-                                                        "http://127.0.0.1:8080/menu",
+                                                        ApiData.getInstance().getHost() + "/menu",
                                                         MenuDataContainer.class
                                                         );
         MenuDataContainer menu_data_container;
@@ -62,22 +58,26 @@ public class App {
             System.err.println(e);
         }
         frame.add(panel);
-        frame.setSize(x_length, y_length);
+        frame.setSize(SwingData.getInstance().getX(), SwingData.getInstance().getY());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
-    class SwitchToGameListener implements ActionListener{
+    class SwitchToGameListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             frame.getContentPane().removeAll();
-            gameScreen = new GameScreen();
-            frame.setVisible(false);
+            GamePanel gp = new GamePanel();
+            frame.add(gp);
+            frame.addKeyListener(gp);
+            frame.revalidate();
         }
     }
 
     class SwitchToSettingsListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             System.out.println("loading game settings");
+            frame.getContentPane().removeAll();
+            frame.add(new SettingsPanel());
         }
     }
 

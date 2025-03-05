@@ -7,10 +7,11 @@ public class Character {
 
     public int x;
     public int y;
+    public int level;
+    public int health = 50;
     int max_x;
     int max_y;
     int size;
-    public int level;
     double momentum = 0.0;
 
     public Character(){}
@@ -32,6 +33,8 @@ public class Character {
     public void keyPressed(KeyEvent event){
         int e = event.getKeyCode();
 
+        System.out.println("event code " + String.valueOf(e));
+
         switch(e){
             case KeyEvent.VK_W:
                 y = y-5<0? y: y-5;
@@ -51,10 +54,17 @@ public class Character {
     }
 
     public void draw(Graphics g) {
-        g.fillRect(x, y, size, size);
+        if (health > 0){
+            g.fillRect(x, y, size, size);
+        }
     }
 
     public Point getLocation(){
         return new Point(x,y);
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+        System.out.println(String.format("current health %d", health));
     }
 }
