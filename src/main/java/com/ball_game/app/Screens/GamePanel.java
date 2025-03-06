@@ -2,6 +2,12 @@ package com.ball_game.app.Screens;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.util.ArrayList;
@@ -20,6 +26,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Timer timer;
     Character main_character;
     EnemyList enemy_list = new EnemyList(SwingData.getInstance().getX(), SwingData.getInstance().getY());
+    SpriteGsonContainer background;
+    File background_file;
 
     public GamePanel(){
         getBackgroundImages();
@@ -52,6 +60,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        // try {
+        //     g.drawImage(ImageIO.read(background_file), 0, 0, null);
+        // } catch (IOException e){
+        //     System.out.println("could not load background image");
+        //     System.exit(0);
+        // }
         main_character.draw(g);
         enemy_list.draw(g);
         enemy_list.chase();
@@ -75,16 +89,22 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         System.exit(0);
     }
 
-    private ArrayList<SpriteGsonContainer> getBackgroundImages(){
-        ArrayList<SpriteGsonContainer> sprite_container_type;
+    private void getBackgroundImages(){
         try{
-            return new ApiTransaction<ArrayList<SpriteGsonContainer>>(
+            background =  new ApiTransaction<ArrayList<SpriteGsonContainer>>(
                 "get",
-                ApiData.getInstance().getHost() + "/sprites/contains/test",
+                ApiData.getInstance().getHost() + "/sprites/contains/arblights2",
                 SpritesDataContainer.getType()
-                ).execute();
+                ).execute().get(0);
+            String file_name = background.name;
+            background_file = new File(file_name+".jpg");
+            try (FileOutputStream fileOutputStream = new FileOutputStream(background_file)){
+                fileOutputStream.write(background.getImageData());
+            } catch (IOException e){
+                System.exit(0);
+            }
         } catch(InvalidRestVerbError e){
-            return sprite_container_type = null;
+            System.out.println("error loading background image");
         }
         
     }
