@@ -1,6 +1,6 @@
 package com.ball_game.app.ApiInterfaces.containers;
 
-public class MenuDataContainer extends TransactionContainer{
+public class MenuDataContainer {
     String title;
     String backgroundColor;
     String buttonTheme;

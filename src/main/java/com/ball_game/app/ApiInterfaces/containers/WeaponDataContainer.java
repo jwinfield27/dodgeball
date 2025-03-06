@@ -1,6 +1,6 @@
 package com.ball_game.app.ApiInterfaces.containers;
 
-public class WeaponDataContainer extends TransactionContainer{
+public class WeaponDataContainer {
     private int level;
     private String name;
     private int damage;

@@ -1,6 +1,6 @@
 package com.ball_game.app.ApiInterfaces.containers;
 
-public class EnemyDataContainer extends TransactionContainer{
+public class EnemyDataContainer {
     private String name;
     private int weaponId;
     private int sprite_size;

@@ -2,35 +2,36 @@ package com.ball_game.app.ApiInterfaces;
 
 import java.io.IOException;
 
+import java.lang.reflect.Type;
+
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+
 import com.google.gson.*;
 
-import com.ball_game.app.ApiInterfaces.containers.*;
 import com.ball_game.app.ApiInterfaces.errors.*;
 
 
-public class ApiTransaction<T extends TransactionContainer> {
+public class ApiTransaction<T> {
 
     private String restCommand;
     private String host;
-    private Class<T> classToCreate; 
+    private Type typeToCreate; 
     
     private Gson gson = new Gson();
     private CloseableHttpClient client = HttpClientBuilder.create().build();
     private String content_type = "application/json";
 
-
     public ApiTransaction(){}
 
-    public ApiTransaction(String restCommand, String uri, Class<T> classToCreate){
+    public ApiTransaction(String restCommand, String uri, Type typeToCreate){
         this.restCommand = restCommand;
         this.host = uri;
-        this.classToCreate = classToCreate;
+        this.typeToCreate = typeToCreate;
     }
 
     public T execute() throws InvalidRestVerbError{
@@ -73,12 +74,11 @@ public class ApiTransaction<T extends TransactionContainer> {
             System.err.println(e.getMessage());
             System.err.println(String.format("\nerror %s is not a valid GET url", this.host));
         }
-        System.out.println(return_string);
-        return gson.fromJson(return_string, this.classToCreate);
+        return gson.fromJson(return_string, this.typeToCreate);
     }
 
     private T post(){
-        return gson.fromJson("", this.classToCreate);
+        return gson.fromJson("", this.typeToCreate);
     }
 
 }

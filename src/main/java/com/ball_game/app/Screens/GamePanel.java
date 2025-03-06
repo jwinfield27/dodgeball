@@ -4,9 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import java.util.ArrayList;
+
 import com.ball_game.app.ApiInterfaces.ApiTransaction;
-import com.ball_game.app.ApiInterfaces.containers.EnemyDataContainer;
+import com.ball_game.app.ApiInterfaces.containers.SpriteGsonContainer;
 import com.ball_game.app.ApiInterfaces.containers.SpritesDataContainer;
+import com.ball_game.app.ApiInterfaces.errors.InvalidRestVerbError;
 import com.ball_game.app.sprites.Character;
 import com.ball_game.app.util.*;
 
@@ -16,7 +19,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private final int DELAY = 15;
     private Timer timer;
     Character main_character;
-    ApiTransaction<SpritesDataContainer> sprite_container;
     EnemyList enemy_list = new EnemyList(SwingData.getInstance().getX(), SwingData.getInstance().getY());
 
     public GamePanel(){
@@ -73,11 +75,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         System.exit(0);
     }
 
-    private void getBackgroundImages(){
-        this.sprite_container = new ApiTransaction<SpritesDataContainer>(
-                                                                    "get",
-                                                                    ApiData.getInstance().getHost() + "/sprites/contains/game_background",
-                                                                    SpritesDataContainer.class
-                                                                    );
+    private ArrayList<SpriteGsonContainer> getBackgroundImages(){
+        ArrayList<SpriteGsonContainer> sprite_container_type;
+        try{
+            return new ApiTransaction<ArrayList<SpriteGsonContainer>>(
+                "get",
+                ApiData.getInstance().getHost() + "/sprites/contains/test",
+                SpritesDataContainer.getType()
+                ).execute();
+        } catch(InvalidRestVerbError e){
+            return sprite_container_type = null;
+        }
+        
     }
 }

@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 
 import com.google.gson.reflect.TypeToken;
 
-public class SpritesDataContainer extends TransactionContainer {
+public class SpritesDataContainer {
 
     private static Type spriteListType = new TypeToken<ArrayList<SpriteGsonContainer>>(){}.getType();
 
