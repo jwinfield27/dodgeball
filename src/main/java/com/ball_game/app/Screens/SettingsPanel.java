@@ -34,5 +34,4 @@ public class SettingsPanel extends JPanel implements KeyListener {
         }
     }
 
-
 }

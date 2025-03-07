@@ -2,27 +2,32 @@ package com.ball_game.app.util;
 
 import javax.swing.JLabel;
 
+import com.ball_game.app.sprites.Character;
+
 public class InfoPanel extends JLabel {
     
+    SpriteStateContainer stateContainer = SpriteStateContainer.getInstance();
     final String fmt_string =  "name: %s    health: %d    level: %d";
+    Character character;
     private String char_name;
     private int char_health;
     private int char_level;
 
-    public InfoPanel(String char_name, int char_health, int char_level){
-        this.char_name = char_name;
-        this.char_health = char_health;
-        this.char_level = char_level;
+    public InfoPanel(){
+        character = stateContainer.getMainCharacter();
+        this.char_name = character.getName();
+        this.char_health = character.health;
+        this.char_level = character.level;
         setText(getPrintString());
     }
 
-    public void updateHealth(int new_health){
-        this.char_health = new_health;
+    public void updateHealth(){
+        this.char_health = character.health;
         super.setText(getPrintString());
     }
 
-    public void update_level(int new_level) {
-        this.char_level = new_level;
+    public void update_level() {
+        this.char_level = character.level;
         super.setText(getPrintString());
     }
 

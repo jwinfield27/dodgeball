@@ -16,13 +16,14 @@ public class EnemyList {
     
     UtilFunctions util;
     List<Enemy> enemies = new ArrayList<>();
+    SwingData swingData = SwingData.getInstance();
     Random rand = new Random();
     Character main_character;
 
     int max_enemies = 1;
 
-    public EnemyList(int x, int y) {
-        util = new UtilFunctions(x, y);
+    public EnemyList() {
+        util = new UtilFunctions(swingData.getX(), swingData.getY());
     }
 
     public Enemy[] createEnemies(Character main_character){
@@ -96,7 +97,7 @@ public class EnemyList {
         // find position in a quadrant where the player isnt
         Point main_char_loc = main_character.getLocation();
         Point spawn_location = util.findEnemySpawn((int)main_char_loc.getX(),(int)main_char_loc.getY());
-        Enemy new_enemy = new Enemy(spawn_location.getX(),spawn_location.getY(), main_character, edc);
+        Enemy new_enemy = new Enemy(spawn_location.getX(),spawn_location.getY(),edc);
         return new_enemy;
     }
 
@@ -121,6 +122,7 @@ public class EnemyList {
             }
         }
     }
+
     public void draw(Graphics g){
         for (Enemy e : enemies){
             e.draw(g);

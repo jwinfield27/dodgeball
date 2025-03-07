@@ -3,25 +3,26 @@ package com.ball_game.app.sprites;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class Character {
+import com.ball_game.app.util.SwingData;
 
-    public int x;
-    public int y;
+public class Character extends BaseSprite {
+
     public int level;
     public int health = 50;
     int max_x;
     int max_y;
     int size;
     double momentum = 0.0;
+    SwingData swingData = SwingData.getInstance();
 
-    public Character(){}
 
-    public Character(int main_frame_x, int main_frame_y, int init_size, int level){
-        this.x = main_frame_x / 2;
+    public Character(String name, int init_size, int level){
+        super(name);
+        this.x = swingData.getX() / 2;
         this.size = init_size;
-        this.y = main_frame_y - (init_size * 2);
-        this.max_x = main_frame_x;
-        this.max_y = main_frame_y;
+        this.y = swingData.getY() - (init_size * 2);
+        this.max_x = swingData.getX();
+        this.max_y = swingData.getY();
         this.level = level;
     }
 

@@ -2,7 +2,6 @@ package com.ball_game.app.Screens;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,19 +21,21 @@ import com.ball_game.app.util.*;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     private InfoPanel info_panel;
-    private final int DELAY = 15;
+    private final int DELAY = 10;
     private Timer timer;
     Character main_character;
-    EnemyList enemy_list = new EnemyList(SwingData.getInstance().getX(), SwingData.getInstance().getY());
+    SpriteStateContainer spriteStateContainer = SpriteStateContainer.getInstance();
+    SwingData swingData = SwingData.getInstance();
+    EnemyList enemy_list = new EnemyList();
     SpriteGsonContainer background;
     File background_file;
 
     public GamePanel(){
         getBackgroundImages();
-        main_character = new Character(SwingData.getInstance().getX(), SwingData.getInstance().getY(),
-                                        50, 5);
-        setPreferredSize(new Dimension(SwingData.getInstance().getX(), SwingData.getInstance().getY()));
-        info_panel = new InfoPanel("test_player", main_character.health, main_character.level);
+        main_character = new Character("test",50, 5);
+        spriteStateContainer.addMainCharacter(main_character);
+        setPreferredSize(new Dimension(swingData.getX(), swingData.getY()));
+        info_panel = new InfoPanel();
         this.add(info_panel);
         enemy_list.createEnemies(main_character);
         timer = new Timer(DELAY, this);
@@ -60,16 +61,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // try {
-        //     g.drawImage(ImageIO.read(background_file), 0, 0, null);
-        // } catch (IOException e){
-        //     System.out.println("could not load background image");
-        //     System.exit(0);
-        // }
+        try {
+            g.drawImage(ImageIO.read(background_file), 0, 0, null);
+        } catch (IOException e){
+            System.out.println("could not load background image");
+            System.exit(0);
+        }
         main_character.draw(g);
         enemy_list.draw(g);
         enemy_list.chase();
-        info_panel.updateHealth(main_character.health);
+        info_panel.updateHealth();
         checkPlayerHealth();
     }
 
@@ -93,7 +94,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         try{
             background =  new ApiTransaction<ArrayList<SpriteGsonContainer>>(
                 "get",
-                ApiData.getInstance().getHost() + "/sprites/contains/arblights2",
+                ApiData.getInstance().getHost() + "/sprites/contains/background",
                 SpritesDataContainer.getType()
                 ).execute().get(0);
             String file_name = background.name;
