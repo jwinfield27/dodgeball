@@ -14,33 +14,47 @@ import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 
 public class EnemyList {
     
-    UtilFunctions util;
     List<Enemy> enemies = new ArrayList<>();
     SwingData swingData = SwingData.getInstance();
+    UtilFunctions util = new UtilFunctions(swingData.getX(), swingData.getY());
     Random rand = new Random();
     Character main_character;
 
     int max_enemies = 1;
 
-    public EnemyList() {
-        util = new UtilFunctions(swingData.getX(), swingData.getY());
-    }
-
     public Enemy[] createEnemies(Character main_character){
         this.main_character = main_character;
         int num_of_new_enemies = max_enemies;
+        EnemyDataContainer new_enemy_data;
         Enemy new_enemy;
-        for(int i= 0; i < num_of_new_enemies; i++){
-            Optional<EnemyDataContainer> new_enemy_data = getEnemyInfoByLevel(main_character.level);
-            while (new_enemy_data.isEmpty()){
-                main_character.level+=1;
-                new_enemy_data = getEnemyInfoByLevel(main_character.level);
-            }
-            new_enemy = createEnemy(new_enemy_data.get());
+        for(int i = 0; i < num_of_new_enemies; i++){
+            new_enemy_data = this.findEnemyData();
+            new_enemy = createEnemy(new_enemy_data);
             enemies.add(new_enemy);
         }
         Enemy[] en = new Enemy[enemies.size()];
         return enemies.toArray(en);
+    }
+
+    private EnemyDataContainer findEnemyData(){
+        Optional<EnemyDataContainer> new_enemy_data_option = getEnemyInfoByLevel(main_character.getLevel());
+        EnemyDataContainer new_enemy_data;
+        if (new_enemy_data_option.isPresent()){
+            new_enemy_data = new_enemy_data_option.get();
+        }
+        else {
+            new_enemy_data = this.expandEnemySearch(new_enemy_data_option);
+        }
+        return new_enemy_data;
+    }
+
+    private EnemyDataContainer expandEnemySearch(Optional<EnemyDataContainer> new_enemy_data){
+        int level =main_character.getLevel();
+        while (new_enemy_data.isEmpty()){
+            level+=1;
+            new_enemy_data = getEnemyInfoByLevel(level);
+        }
+        return new_enemy_data.get();
     }
 
     private Optional<EnemyDataContainer> getEnemyInfoByLevel(int level){
@@ -106,9 +120,8 @@ public class EnemyList {
     }
 
     public void chase(){
-        Point character_location = main_character.getLocation();
         for (Enemy e : enemies){
-            e.chase((int)character_location.getX(), (int)character_location.getY());
+            e.chase();
         }
         for (Enemy e : enemies){
             String weapon_type = e.get_weapon_type().strip();

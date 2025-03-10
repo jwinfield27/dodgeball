@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import com.ball_game.app.ApiInterfaces.ApiTransaction;
 import com.ball_game.app.ApiInterfaces.containers.SpriteGsonContainer;
 import com.ball_game.app.ApiInterfaces.containers.SpritesDataContainer;
+import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 import com.ball_game.app.ApiInterfaces.errors.InvalidRestVerbError;
 import com.ball_game.app.sprites.Character;
 import com.ball_game.app.util.*;
@@ -33,6 +34,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public GamePanel(){
         getBackgroundImages();
         main_character = new Character("test",50, 5);
+        WeaponDataContainer character_weapon = null;
+        main_character.giveWeapon(character_weapon);
         spriteStateContainer.addMainCharacter(main_character);
         setPreferredSize(new Dimension(swingData.getX(), swingData.getY()));
         info_panel = new InfoPanel();

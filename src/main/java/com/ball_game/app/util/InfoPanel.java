@@ -17,7 +17,7 @@ public class InfoPanel extends JLabel {
         character = stateContainer.getMainCharacter();
         this.char_name = character.getName();
         this.char_health = character.health;
-        this.char_level = character.level;
+        this.char_level = character.getLevel();
         setText(getPrintString());
     }
 
@@ -27,7 +27,7 @@ public class InfoPanel extends JLabel {
     }
 
     public void update_level() {
-        this.char_level = character.level;
+        this.char_level = character.getLevel();
         super.setText(getPrintString());
     }
 

@@ -3,18 +3,21 @@ package com.ball_game.app.sprites;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 import com.ball_game.app.util.SwingData;
 
 public class Character extends BaseSprite {
 
-    public int level;
-    public int health = 50;
+    int level;
     int max_x;
     int max_y;
     int size;
-    double momentum = 0.0;
     SwingData swingData = SwingData.getInstance();
+    WeaponDataContainer weapon;
 
+    double momentum = 0.0;
+    Boolean weapon_ready = true;
+    public int health = 50;
 
     public Character(String name, int init_size, int level){
         super(name);
@@ -26,6 +29,10 @@ public class Character extends BaseSprite {
         this.level = level;
     }
 
+    public int getLevel(){
+        return this.level;
+    }
+
     public void setNewLocation(int new_x, int new_y){
         x = new_x;
         y = new_y;
@@ -33,9 +40,11 @@ public class Character extends BaseSprite {
 
     public void keyPressed(KeyEvent event){
         int e = event.getKeyCode();
+        this.moveCharacter(e);
+        this.moveWeapon();
+    }
 
-        System.out.println("event code " + String.valueOf(e));
-
+    private void moveCharacter(int e){
         switch(e){
             case KeyEvent.VK_W:
                 y = y-5<0? y: y-5;
@@ -54,6 +63,10 @@ public class Character extends BaseSprite {
         }
     }
 
+    private void moveWeapon(){
+        // TODO
+    }
+
     public void draw(Graphics g) {
         if (health > 0){
             g.fillRect(x, y, size, size);
@@ -67,5 +80,9 @@ public class Character extends BaseSprite {
     public void takeDamage(int damage) {
         health -= damage;
         System.out.println(String.format("current health %d", health));
+    }
+
+    public void giveWeapon(WeaponDataContainer wdc){
+        this.weapon = wdc;
     }
 }

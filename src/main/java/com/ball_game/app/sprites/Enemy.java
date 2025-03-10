@@ -1,6 +1,7 @@
 package com.ball_game.app.sprites;
 
 import java.awt.*;
+import java.lang.Math;
 
 import com.ball_game.app.ApiInterfaces.containers.EnemyDataContainer;
 import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
@@ -35,15 +36,24 @@ public class Enemy extends BaseSprite{
             draw_weapon(g);
     }
 
-    public void chase(int character_x, int character_y){
-        boolean move_left = character_x < this.x ? true: false;
-        boolean move_up = character_y < this.y ? true: false;
+    public void chase(){
+        this.move();
+        this.spawn_weapon();
+    }
 
-        this.x = move_left ? this.x - this.momentum: this.x + momentum;
-        this.y = move_up ? this.y - this.momentum: this.y + momentum;
+    private void move(){
+        boolean move_left = this.character_ref.x < this.x ? true: false;
+        boolean move_up = this.character_ref.y < this.y ? true: false;
 
+        if(Math.abs(this.x - this.character_ref.x) > 100 || Math.abs(this.y - this.character_ref.y) > 100){
+            this.x = move_left ? this.x - this.momentum: this.x + momentum;
+            this.y = move_up ? this.y - this.momentum: this.y + momentum;
+        }
+    }
+
+    private void spawn_weapon(){
         if (weapon_ready){
-            createWeapon(character_x, character_y);
+            createWeapon();
             weapon_ready = false;
         }
         if (current_weapon != null){
@@ -51,13 +61,12 @@ public class Enemy extends BaseSprite{
         }
     }
 
-
-    private void createWeapon(int character_x, int character_y){
+    private void createWeapon(){
         current_weapon = new Weapon(
-                                    x,
-                                    y,
-                                    character_x,
-                                    character_y,
+                                    x+this.size/2,
+                                    y+this.size/2,
+                                    this.character_ref.x,
+                                    this.character_ref.y,
                                     wdc.getLevel(),
                                     wdc.getDamage(),
                                     wdc.getName(),

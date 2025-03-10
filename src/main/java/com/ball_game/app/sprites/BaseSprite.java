@@ -19,7 +19,9 @@ public abstract class BaseSprite {
         return this.name;
     }
 
-    public void draw(Graphics g){}
+    public void draw(Graphics g){
+        g.drawRect(x, y, 50, 40);
+    }
 
     public Point getLocation(){
         return new Point(x,y);
