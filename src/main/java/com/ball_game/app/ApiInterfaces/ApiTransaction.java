@@ -3,6 +3,7 @@ package com.ball_game.app.ApiInterfaces;
 import java.io.IOException;
 
 import java.lang.reflect.Type;
+import java.util.Set;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -36,20 +37,17 @@ public class ApiTransaction<T> {
     }
 
     public T execute(){
-        T res = null;
-        switch (this.restCommand) {
-            case "get":
-                res = get();
-                break;
-            case "post":
-                res = post();
-                break;
-            default:
-                System.out.println("invalid rest verb given: " + this.restCommand);
-                System.exit(0);
+        if(!Set.of("get", "post").contains(this.restCommand)){
+            System.out.println("invalid rest verb given: " + this.restCommand);
+            System.exit(0);
         }
-        // This will never run
-        return res;
+        else if(this.restCommand.equals("get")){
+            return get();
+        } 
+        else if(this.restCommand.equals("post")){
+            return post();
+        }
+        return null;
     }
 
     private T get(){
