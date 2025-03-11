@@ -8,15 +8,21 @@ import com.ball_game.app.util.SwingData;
 
 public class Character extends BaseSprite {
 
-    int level;
-    int max_x;
-    int max_y;
-    int size;
-    SwingData swingData = SwingData.getInstance();
-    WeaponDataContainer weapon;
+    private static boolean w_pressed = false;
+    private static boolean a_pressed = false;
+    private static boolean s_pressed = false;
+    private static boolean d_pressed = false;
 
-    double momentum = 0.0;
-    Boolean weapon_ready = true;
+    public int level;
+    public int max_x;
+    public int max_y;
+    public int size;
+
+    private SwingData swingData = SwingData.getInstance();
+    private WeaponDataContainer weapon;
+
+    private double momentum = 0.0;
+    private Boolean weapon_ready = true;
     public int health = 50;
 
     public Character(String name, int init_size, int level){
@@ -40,37 +46,48 @@ public class Character extends BaseSprite {
 
     public void keyPressed(KeyEvent event){
         int e = event.getKeyCode();
-        this.moveCharacter(e);
-        this.moveWeapon();
+        this.changeCharacterDirection(e, true);
     }
 
-    private void moveCharacter(int e){
+    public void keyReleased(KeyEvent event){
+        int e = event.getKeyCode();
+        this.changeCharacterDirection(e, false);
+    }
+
+    private void changeCharacterDirection(int e, boolean value){
         switch(e){
             case KeyEvent.VK_W:
-                y = y-5<0? y: y-5;
+                w_pressed = value;
                 break;
             case KeyEvent.VK_S:
-                y = (y+5+size)<max_y? y+5: y;
+                w_pressed = value;
                 break;
             case KeyEvent.VK_D:
-                x = (x+5+size)<max_x? x+5: x;
+                w_pressed = value;
                 break;
             case KeyEvent.VK_A:
-                x = x-5<0? x: x-5;
+                w_pressed = value;
                 break;
             default:
                 break;
         }
     }
 
-    private void moveWeapon(){
-        // TODO
-    }
-
     public void draw(Graphics g) {
+        change_position();
+        move_weapon();
         if (health > 0){
             g.fillRect(x, y, size, size);
         }
+    }
+
+    private void move_weapon(){}
+
+    private void change_position(){
+        if(w_pressed){ y = y-5<0? y: y-5; }
+        if(a_pressed){ x = x-5<0? x: x-5; }
+        if(s_pressed){ y = (y+5+size)<max_y? y+5: y; }
+        if(d_pressed){ x = (x+5+size)<max_x? x+5: x; }
     }
 
     public Point getLocation(){
