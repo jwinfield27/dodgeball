@@ -13,7 +13,7 @@ public class Weapon extends BaseSprite {
 
     private int x;
     private int y;
-    private int momentum = 5;
+    private int momentum = 3;
     private int end_x = 0;
     private int end_y = 0;
     private int level;

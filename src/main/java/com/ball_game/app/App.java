@@ -3,7 +3,6 @@ package com.ball_game.app;
 import com.ball_game.app.Screens.*;
 import com.ball_game.app.ApiInterfaces.ApiTransaction;
 import com.ball_game.app.ApiInterfaces.containers.MenuDataContainer;
-import com.ball_game.app.ApiInterfaces.errors.InvalidRestVerbError;
 import com.ball_game.app.util.*;
 
 import java.awt.*;
@@ -37,25 +36,19 @@ public class App {
                                                         ApiData.getInstance().getHost() + "/menu",
                                                         MenuDataContainer.class
                                                         );
-        MenuDataContainer menu_data_container;
-        try {
-            menu_data_container = menu_data.execute();
-            menu_label = new JLabel(menu_data_container.getBackgroundColor());
-            menu_label.setHorizontalAlignment(SwingConstants.CENTER);
-            frame = new JFrame(menu_data_container.getTitle());
-            frame.add(menu_label);
+        MenuDataContainer menu_data_container = menu_data.execute();
+        menu_label = new JLabel(menu_data_container.getBackgroundColor());
+        menu_label.setHorizontalAlignment(SwingConstants.CENTER);
+        frame = new JFrame(menu_data_container.getTitle());
+        frame.add(menu_label);
 
-            panel.setLayout(new GridBagLayout());
-            RGBTuple color_data = BackgroundConverter.getRGBTuple(menu_data_container.getBackgroundColor());
-            panel.setBackground(new Color(color_data.r, color_data.g, color_data.b));
+        panel.setLayout(new GridBagLayout());
+        RGBTuple color_data = BackgroundConverter.getRGBTuple(menu_data_container.getBackgroundColor());
+        panel.setBackground(new Color(color_data.r, color_data.g, color_data.b));
 
-            JButton[] menu_buttons = createButtons(menu_data_container.getBackgroundColor());
-            for(JButton jb: menu_buttons){
-                panel.add(jb);
-            }
-        }
-        catch (InvalidRestVerbError e){
-            System.err.println(e);
+        JButton[] menu_buttons = createButtons(menu_data_container.getBackgroundColor());
+        for(JButton jb: menu_buttons){
+            panel.add(jb);
         }
         frame.add(panel);
         frame.setSize(SwingData.getInstance().getX(), SwingData.getInstance().getY());

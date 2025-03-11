@@ -34,20 +34,20 @@ public class ApiTransaction<T> {
         this.typeToCreate = typeToCreate;
     }
 
-    public T execute() throws InvalidRestVerbError{
-        T res;
+    public T execute(){
+        T res = null;
         switch (this.restCommand) {
             case "get":
                 res = get();
                 break;
-        
             case "post":
                 res = post();
                 break;
-
             default:
-                throw new InvalidRestVerbError(String.format("%s is not a valid rest verb", this.restCommand));
+                System.out.println("invalid rest verb given: " + this.restCommand);
+                System.exit(0);
         }
+        // This will never run
         return res;
     }
 
