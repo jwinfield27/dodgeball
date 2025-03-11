@@ -59,10 +59,10 @@ public class EnemyList {
 
     private Optional<EnemyDataContainer> getEnemyInfoByLevel(int level){
         ApiTransaction<EnemyDataContainer> enemy_container = new ApiTransaction<EnemyDataContainer>(
-                                                                    "get",
-                                                                    ApiData.getInstance().getHost() + "/enemy/level/random/5",
-                                                                    EnemyDataContainer.class
-                                                                    );
+            "get",
+            "/enemy/level/random/5",
+            EnemyDataContainer.class
+        );
         EnemyDataContainer edc;
         int needed_weapon_id;
         WeaponDataContainer weapon;
@@ -90,7 +90,7 @@ public class EnemyList {
     }
 
     private Optional<WeaponDataContainer> getWeaponDataById(int id){
-        String get_weapon_base_string = ApiData.getInstance().getHost() + "/weapon/" + String.valueOf(id);
+        String get_weapon_base_string = "/weapon/" + String.valueOf(id);
         ApiTransaction<WeaponDataContainer> weapon_container = new ApiTransaction<WeaponDataContainer>(
             "get",
             get_weapon_base_string,

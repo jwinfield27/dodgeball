@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         WeaponDataContainer character_weapon = null;
         ApiTransaction<WeaponDataContainer> wdc = new ApiTransaction<WeaponDataContainer>(
             "get",
-            ApiData.getInstance().getHost() + "/weapon/random/character",
+            "/weapon/random/character",
             WeaponDataContainer.class
         );
         character_weapon = wdc.execute();
@@ -101,9 +101,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private void getBackgroundImages(){
         background =  new ApiTransaction<ArrayList<SpriteGsonContainer>>(
             "get",
-            ApiData.getInstance().getHost() + "/sprites/contains/background",
+            "/sprites/contains/background",
             SpritesDataContainer.getType()
-            ).execute().get(0);
+        ).execute().get(0);
         String file_name = background.name;
         background_file = new File(file_name+".jpg");
         try (FileOutputStream fileOutputStream = new FileOutputStream(background_file)){

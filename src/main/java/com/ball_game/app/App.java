@@ -33,7 +33,7 @@ public class App {
     private void createAndShowGui() {
         ApiTransaction<MenuDataContainer> menu_data = new ApiTransaction<MenuDataContainer>(
                                                         "get",
-                                                        ApiData.getInstance().getHost() + "/menu",
+                                                        "/menu",
                                                         MenuDataContainer.class
                                                         );
         MenuDataContainer menu_data_container = menu_data.execute();

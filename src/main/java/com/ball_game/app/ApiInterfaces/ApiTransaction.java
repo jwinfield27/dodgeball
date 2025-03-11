@@ -14,6 +14,7 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.*;
 
 import com.ball_game.app.ApiInterfaces.errors.*;
+import com.ball_game.app.util.ApiData;
 
 
 public class ApiTransaction<T> {
@@ -30,7 +31,7 @@ public class ApiTransaction<T> {
 
     public ApiTransaction(String restCommand, String uri, Type typeToCreate){
         this.restCommand = restCommand;
-        this.host = uri;
+        this.host = ApiData.getInstance().getHost() + uri;
         this.typeToCreate = typeToCreate;
     }
 
