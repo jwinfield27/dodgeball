@@ -83,6 +83,7 @@ public class Character extends BaseSprite {
     }
 
     public void giveWeapon(WeaponDataContainer wdc){
+        System.out.println("weapon given to player: " + wdc.getName());
         this.weapon = wdc;
     }
 }

@@ -15,7 +15,6 @@ import com.ball_game.app.ApiInterfaces.ApiTransaction;
 import com.ball_game.app.ApiInterfaces.containers.SpriteGsonContainer;
 import com.ball_game.app.ApiInterfaces.containers.SpritesDataContainer;
 import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
-import com.ball_game.app.ApiInterfaces.errors.InvalidRestVerbError;
 import com.ball_game.app.sprites.Character;
 import com.ball_game.app.util.*;
 
@@ -35,6 +34,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         getBackgroundImages();
         main_character = new Character("test",50, 5);
         WeaponDataContainer character_weapon = null;
+        ApiTransaction<WeaponDataContainer> wdc = new ApiTransaction<WeaponDataContainer>(
+            "get",
+            ApiData.getInstance().getHost() + "/weapon/random/character",
+            WeaponDataContainer.class
+        );
+        character_weapon = wdc.execute();
         main_character.giveWeapon(character_weapon);
         spriteStateContainer.addMainCharacter(main_character);
         setPreferredSize(new Dimension(swingData.getX(), swingData.getY()));
@@ -94,22 +99,17 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
     private void getBackgroundImages(){
-        try{
-            background =  new ApiTransaction<ArrayList<SpriteGsonContainer>>(
-                "get",
-                ApiData.getInstance().getHost() + "/sprites/contains/background",
-                SpritesDataContainer.getType()
-                ).execute().get(0);
-            String file_name = background.name;
-            background_file = new File(file_name+".jpg");
-            try (FileOutputStream fileOutputStream = new FileOutputStream(background_file)){
-                fileOutputStream.write(background.getImageData());
-            } catch (IOException e){
-                System.exit(0);
-            }
-        } catch(InvalidRestVerbError e){
-            System.out.println("error loading background image");
+        background =  new ApiTransaction<ArrayList<SpriteGsonContainer>>(
+            "get",
+            ApiData.getInstance().getHost() + "/sprites/contains/background",
+            SpritesDataContainer.getType()
+            ).execute().get(0);
+        String file_name = background.name;
+        background_file = new File(file_name+".jpg");
+        try (FileOutputStream fileOutputStream = new FileOutputStream(background_file)){
+            fileOutputStream.write(background.getImageData());
+        } catch (IOException e){
+            System.exit(0);
         }
-        
     }
 }
