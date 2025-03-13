@@ -3,7 +3,7 @@ package com.ball_game.app.sprites.weapons;
 import java.awt.Graphics;
 import java.awt.Point;
 
-public class  DrawableWeapon {
+public abstract class DrawableWeapon {
 
     protected int x;
     protected int y;

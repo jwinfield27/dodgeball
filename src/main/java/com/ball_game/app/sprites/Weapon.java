@@ -14,8 +14,6 @@ public class Weapon extends BaseSprite {
     private int x;
     private int y;
     private int momentum = 3;
-    private int end_x = 0;
-    private int end_y = 0;
     private int level;
     private int damage;
     private int damage_reset_cooldown_count;
@@ -23,22 +21,20 @@ public class Weapon extends BaseSprite {
     private boolean delt_damage = false;
     private DrawableWeapon draw_weapon;
 
-    public Weapon(int caster_x, int caster_y, int character_x, int character_y, int level, int damage, String name, String weapon_type) {
+    public Weapon(String caster_type, int caster_x, int caster_y, int level, int damage, String name, String weapon_type) {
         super(name+"-"+String.valueOf(id_count));
         id_count++;
         this.x = caster_x;
         this.y = caster_y;
-        this.end_x = character_x;
-        this.end_y = character_y;
         this.level = level;
         this.damage = damage;
         this.weapon_type = weapon_type;
-        findDrawType();
+        findDrawType(caster_type);
     }
 
-    private void findDrawType(){
+    private void findDrawType(String caster_type){
         this.draw_weapon = switch (weapon_type){
-            case "cast" -> new CastWeapon(x,y,momentum, end_x, end_y);
+            case "cast" -> new CastWeapon(x,y,momentum, caster_type);
             default -> throw new IllegalArgumentException(
                 String.format("unsupported weapon type found %s", weapon_type));
         };

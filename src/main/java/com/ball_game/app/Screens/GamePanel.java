@@ -21,7 +21,7 @@ import com.ball_game.app.util.*;
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     private InfoPanel info_panel;
-    private final int DELAY = 10;
+    private final int DELAY = 15;
     private Timer timer;
     Character main_character;
     SpriteStateContainer spriteStateContainer = SpriteStateContainer.getInstance();
@@ -32,7 +32,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     public GamePanel(){
         getBackgroundImages();
-        main_character = new Character("test",50, 5);
         WeaponDataContainer character_weapon = null;
         ApiTransaction<WeaponDataContainer> wdc = new ApiTransaction<WeaponDataContainer>(
             "get",
@@ -40,7 +39,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             WeaponDataContainer.class
         );
         character_weapon = wdc.execute();
-        main_character.giveWeapon(character_weapon);
+        main_character = new Character("test",50, 5, character_weapon);
         spriteStateContainer.addMainCharacter(main_character);
         setPreferredSize(new Dimension(swingData.getX(), swingData.getY()));
         info_panel = new InfoPanel();
@@ -61,7 +60,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e){}
+    public void keyReleased(KeyEvent e){
+        int ekc = e.getKeyCode();
+
+        if (ekc==KeyEvent.VK_W || ekc==KeyEvent.VK_A || ekc==KeyEvent.VK_D || ekc==KeyEvent.VK_S){
+            main_character.keyReleased(e);
+        }
+        repaint();
+    }
 
     @Override
     public void keyTyped(KeyEvent e){}

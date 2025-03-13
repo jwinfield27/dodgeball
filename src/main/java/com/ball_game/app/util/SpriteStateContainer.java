@@ -31,6 +31,10 @@ public class SpriteStateContainer {
         sprites.add(sprite);
     }
 
+    public ArrayList<BaseSprite> getSprites(){
+        return sprites;
+    }
+
     public Optional<BaseSprite> getSpriteByyName(String name){
         for(BaseSprite sprite : sprites){
             if (sprite.getName() == name){

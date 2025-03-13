@@ -4,31 +4,31 @@ import java.awt.*;
 import java.lang.Math;
 
 import com.ball_game.app.ApiInterfaces.containers.EnemyDataContainer;
-import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 import com.ball_game.app.util.SpriteStateContainer;
 
-public class Enemy extends BaseSprite{
+public class Enemy extends BaseActor {
 
     private static int id_count = 0;
 
     int level;
     boolean weapon_ready;
-    WeaponDataContainer wdc;
     Character character_ref;
     SpriteStateContainer stateContainer = SpriteStateContainer.getInstance();
-    Weapon current_weapon = null;
     int size;
     int momentum = 1;
 
     public Enemy(double start_x, double start_y, EnemyDataContainer edc){
-        super(edc.getName() +"-"+String.valueOf(id_count));
+        super(
+            edc.getName() +"-"+String.valueOf(id_count),
+            edc.getSpriteSize(),
+            edc.getWeapon());
         this.character_ref = stateContainer.getMainCharacter();
         this.x = (int)start_x;
         this.y = (int)start_y;
         this.weapon_ready = true;
-        this.size = edc.getSpriteSize();
+        ;
         this.level = edc.getLevel();
-        this.wdc = edc.getWeapon();
+        
     }
 
     public void draw(Graphics g){
@@ -51,7 +51,7 @@ public class Enemy extends BaseSprite{
         }
     }
 
-    private void spawn_weapon(){
+    protected void spawn_weapon(){
         if (weapon_ready){
             createWeapon();
             weapon_ready = false;
@@ -61,17 +61,16 @@ public class Enemy extends BaseSprite{
         }
     }
 
-    private void createWeapon(){
+    private void createWeapon() {
         current_weapon = new Weapon(
-                                    x+this.size/2,
-                                    y+this.size/2,
-                                    this.character_ref.x,
-                                    this.character_ref.y,
-                                    wdc.getLevel(),
-                                    wdc.getDamage(),
-                                    wdc.getName(),
-                                    wdc.getWeapon_type()
-                                    );
+            this.getClass().getTypeName(),
+            x+this.size/2,
+            y+this.size/2,
+            wdc.getLevel(),
+            wdc.getDamage(),
+            wdc.getName(),
+            wdc.getWeapon_type()
+        );
     }
 
     private void draw_weapon(Graphics g){

@@ -1,18 +1,24 @@
 package com.ball_game.app.sprites.weapons;
 
 import java.awt.Graphics;
+import java.awt.Point;
+
+import com.ball_game.app.util.SpriteStateContainer;
 
 public class CastWeapon extends DrawableWeapon{
+
+    SpriteStateContainer spriteStateContainer = SpriteStateContainer.getInstance();
 
     double slope;
     double y_intercept;
     boolean move_positive;
     int size = 10;
 
-    public CastWeapon(int x, int y, int momentum, int end_x, int end_y){
+    public CastWeapon(int x, int y, int momentum, String caster_type){
         super(x,y,momentum);
         System.out.println(String.format("starting weapon location %d, %d",x,y));
-        find_move_directions(end_x, end_y);
+        Point main_char_loc = spriteStateContainer.getMainCharacter().getLocation();
+        find_move_directions(main_char_loc.x, main_char_loc.y);
     }
 
     public void draw(Graphics g){

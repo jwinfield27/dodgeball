@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 import com.ball_game.app.util.SwingData;
 
-public class Character extends BaseSprite {
+public class Character extends BaseActor {
 
     private static boolean w_pressed = false;
     private static boolean a_pressed = false;
@@ -16,23 +16,18 @@ public class Character extends BaseSprite {
     public int level;
     public int max_x;
     public int max_y;
-    public int size;
+    public int health;
 
     private SwingData swingData = SwingData.getInstance();
-    private WeaponDataContainer weapon;
 
-    private double momentum = 0.0;
-    private Boolean weapon_ready = true;
-    public int health = 50;
-
-    public Character(String name, int init_size, int level){
-        super(name);
+    public Character(String name, int init_size, int level, WeaponDataContainer wdc){
+        super(name, init_size, wdc);
         this.x = swingData.getX() / 2;
-        this.size = init_size;
         this.y = swingData.getY() - (init_size * 2);
         this.max_x = swingData.getX();
         this.max_y = swingData.getY();
         this.level = level;
+        this.health = 50;
     }
 
     public int getLevel(){
@@ -51,6 +46,7 @@ public class Character extends BaseSprite {
 
     public void keyReleased(KeyEvent event){
         int e = event.getKeyCode();
+        System.out.println("key released" + event.toString());
         this.changeCharacterDirection(e, false);
     }
 
@@ -58,15 +54,19 @@ public class Character extends BaseSprite {
         switch(e){
             case KeyEvent.VK_W:
                 w_pressed = value;
+                System.out.println("w pressed");
                 break;
             case KeyEvent.VK_S:
-                w_pressed = value;
+                s_pressed = value;
+                System.out.println("s pressed");
                 break;
             case KeyEvent.VK_D:
-                w_pressed = value;
+                d_pressed = value;
+                System.out.println("d pressed");
                 break;
             case KeyEvent.VK_A:
-                w_pressed = value;
+                a_pressed = value;
+                System.out.println("a pressed");
                 break;
             default:
                 break;
@@ -75,13 +75,11 @@ public class Character extends BaseSprite {
 
     public void draw(Graphics g) {
         change_position();
-        move_weapon();
+        this.spawn_weapon();
         if (health > 0){
             g.fillRect(x, y, size, size);
         }
     }
-
-    private void move_weapon(){}
 
     private void change_position(){
         if(w_pressed){ y = y-5<0? y: y-5; }
@@ -96,11 +94,5 @@ public class Character extends BaseSprite {
 
     public void takeDamage(int damage) {
         health -= damage;
-        System.out.println(String.format("current health %d", health));
-    }
-
-    public void giveWeapon(WeaponDataContainer wdc){
-        System.out.println("weapon given to player: " + wdc.getName());
-        this.weapon = wdc;
     }
 }
