@@ -3,7 +3,7 @@ package com.ball_game.app.util;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.ball_game.app.sprites.BaseSprite;
+import com.ball_game.app.sprites.BaseActor;
 import com.ball_game.app.sprites.Character;
 
 public class SpriteStateContainer {
@@ -11,7 +11,7 @@ public class SpriteStateContainer {
     private static SpriteStateContainer INSTANCE;
 
     private static Character main_character;
-    private static ArrayList<BaseSprite> sprites = new ArrayList<BaseSprite>();
+    private static ArrayList<BaseActor> sprites = new ArrayList<BaseActor>();
 
     private SpriteStateContainer(){}
 
@@ -27,16 +27,16 @@ public class SpriteStateContainer {
         main_character = character;
     }
 
-    public void addSprite(BaseSprite sprite){
+    public void addSprite(BaseActor sprite){
         sprites.add(sprite);
     }
 
-    public ArrayList<BaseSprite> getSprites(){
+    public ArrayList<BaseActor> getSprites(){
         return sprites;
     }
 
-    public Optional<BaseSprite> getSpriteByyName(String name){
-        for(BaseSprite sprite : sprites){
+    public Optional<BaseActor> getSpriteByyName(String name){
+        for(BaseActor sprite : sprites){
             if (sprite.getName() == name){
                 return Optional.of(sprite);
             }

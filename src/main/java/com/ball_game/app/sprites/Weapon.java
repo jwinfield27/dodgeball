@@ -11,30 +11,28 @@ public class Weapon extends BaseSprite {
 
     private static int id_count = 0;
 
-    private int x;
-    private int y;
-    private int momentum = 3;
+    private int momentum = 5;
     private int level;
     private int damage;
     private int damage_reset_cooldown_count;
     private String weapon_type;
+    private boolean is_enemy;
     private boolean delt_damage = false;
     private DrawableWeapon draw_weapon;
 
-    public Weapon(String caster_type, int caster_x, int caster_y, int level, int damage, String name, String weapon_type) {
+    public Weapon(boolean is_enemy, int caster_x, int caster_y, int level, int damage, String name, String weapon_type) {
         super(name+"-"+String.valueOf(id_count));
         id_count++;
-        this.x = caster_x;
-        this.y = caster_y;
         this.level = level;
         this.damage = damage;
+        this.is_enemy = is_enemy;
         this.weapon_type = weapon_type;
-        findDrawType(caster_type);
+        findDrawType(caster_x, caster_y, is_enemy);
     }
 
-    private void findDrawType(String caster_type){
+    private void findDrawType(int x, int y, boolean is_enemy){
         this.draw_weapon = switch (weapon_type){
-            case "cast" -> new CastWeapon(x,y,momentum, caster_type);
+            case "cast" -> new CastWeapon(x,y,momentum, is_enemy);
             default -> throw new IllegalArgumentException(
                 String.format("unsupported weapon type found %s", weapon_type));
         };
@@ -84,33 +82,38 @@ public class Weapon extends BaseSprite {
         }
     }
 
-    public void checkForDamage(Character character_ref){
+    public BaseActor getActorToDamage(){
+        if (this.is_enemy){
+            return this.spriteStateContainer.getSprites().get(0);
+        }
+        return this.spriteStateContainer.getMainCharacter();
+    }
+
+    public void checkForDamage(){
         Point weapon_location = this.getLocation();
-        Point character_location = character_ref.getLocation();
+        BaseActor actor_to_damage = this.getActorToDamage();
+        Point actor_to_damage_loc = actor_to_damage.getLocation();
 
-        int weapon_x = (int)weapon_location.getX();
-        int weapon_y = (int)weapon_location.getY();
+        int end_weapon_x = weapon_location.x + getWeaponSize();
+        int end_weapon_y = weapon_location.y + getWeaponSize();
 
-        int end_weapon_x = weapon_x + getWeaponSize();
-        int end_weapon_y = weapon_y + getWeaponSize();
+        int character_x = actor_to_damage_loc.x;
+        int character_y = actor_to_damage_loc.y;
 
-        int character_x = (int)character_location.getX();
-        int character_y = (int)character_location.getY();
-
-        int end_char_x = character_x + character_ref.size;
-        int end_char_y = character_y + character_ref.size;
+        int end_char_x = character_x + actor_to_damage.size;
+        int end_char_y = character_y + actor_to_damage.size;
 
         boolean takes_damage = true;
 
-        if(end_weapon_x < character_x || end_char_x < weapon_x){
+        if(end_weapon_x < character_x || end_char_x < weapon_location.x){
             takes_damage = false;
         }
-        else if (end_weapon_y < character_y || end_char_y < weapon_y){
+        else if (end_weapon_y < character_y || end_char_y < weapon_location.y){
             takes_damage = false;
         }
 
         if(takes_damage && !this.hasDealtDamage()){
-            character_ref.takeDamage(level);
+            actor_to_damage.takeDamage(level);
             this.setDeltDamage(true);
         }
         else {

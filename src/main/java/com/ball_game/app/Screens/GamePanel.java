@@ -94,7 +94,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
     private void checkPlayerHealth(){
-        if (main_character.health == 0) {
+        if (main_character.getHealth() == 0) {
             launchEndScreen();
         }
     }

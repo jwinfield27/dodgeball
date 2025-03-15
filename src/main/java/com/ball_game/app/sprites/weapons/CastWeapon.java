@@ -14,11 +14,15 @@ public class CastWeapon extends DrawableWeapon{
     boolean move_positive;
     int size = 10;
 
-    public CastWeapon(int x, int y, int momentum, String caster_type){
+    public CastWeapon(int x, int y, int momentum, boolean is_enemy){
         super(x,y,momentum);
-        System.out.println(String.format("starting weapon location %d, %d",x,y));
-        Point main_char_loc = spriteStateContainer.getMainCharacter().getLocation();
-        find_move_directions(main_char_loc.x, main_char_loc.y);
+        Point entity_loc = null;
+        if (is_enemy){
+            entity_loc = spriteStateContainer.getMainCharacter().getLocation();
+        } else {
+            entity_loc = spriteStateContainer.getSprites().get(0).getLocation();
+        }
+        find_move_directions(entity_loc.x, entity_loc.y);
     }
 
     public void draw(Graphics g){
@@ -42,6 +46,5 @@ public class CastWeapon extends DrawableWeapon{
         }
         move_positive = end_x > this.x? true : false;
         this.y_intercept = this.y - slope * this.x;
-        System.out.println(String.format("y = %.2fx + %.2f", slope, y_intercept));
     }
 }

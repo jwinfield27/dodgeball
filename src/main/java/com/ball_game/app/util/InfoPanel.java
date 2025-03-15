@@ -16,13 +16,13 @@ public class InfoPanel extends JLabel {
     public InfoPanel(){
         character = stateContainer.getMainCharacter();
         this.char_name = character.getName();
-        this.char_health = character.health;
+        this.char_health = character.getHealth();
         this.char_level = character.getLevel();
         setText(getPrintString());
     }
 
     public void updateHealth(){
-        this.char_health = character.health;
+        this.char_health = character.getHealth();
         super.setText(getPrintString());
     }
 
