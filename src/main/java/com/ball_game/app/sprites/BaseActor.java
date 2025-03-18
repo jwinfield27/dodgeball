@@ -5,7 +5,7 @@ import java.awt.*;
 import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 import com.ball_game.app.util.SwingData;
 
-public abstract class BaseActor extends BaseSprite{
+public class BaseActor extends BaseSprite{
 
     protected int health;
     protected Weapon current_weapon;
@@ -97,6 +97,10 @@ public abstract class BaseActor extends BaseSprite{
 
     public int getHealth(){
         return this.health;
+    }
+
+    public int getSize(){
+        return this.size;
     }
 
     private void checkForDamage(){

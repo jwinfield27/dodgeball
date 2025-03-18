@@ -3,26 +3,22 @@ package com.ball_game.app.sprites.weapons;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import com.ball_game.app.sprites.BaseActor;
 import com.ball_game.app.util.SpriteStateContainer;
 
 public class CastWeapon extends DrawableWeapon{
 
     SpriteStateContainer spriteStateContainer = SpriteStateContainer.getInstance();
 
-    double slope;
-    double y_intercept;
-    boolean move_positive;
+    double velx;
+    double vely;
+    boolean is_enemy;
     int size = 10;
 
     public CastWeapon(int x, int y, int momentum, boolean is_enemy){
         super(x,y,momentum);
-        Point entity_loc = null;
-        if (is_enemy){
-            entity_loc = spriteStateContainer.getMainCharacter().getLocation();
-        } else {
-            entity_loc = spriteStateContainer.getSprites().get(0).getLocation();
-        }
-        find_move_directions(entity_loc.x, entity_loc.y);
+        this.is_enemy = is_enemy;
+        set_move_vector();
     }
 
     public void draw(Graphics g){
@@ -30,21 +26,37 @@ public class CastWeapon extends DrawableWeapon{
     }
 
     public void update(){
-        double temp_y = y;
-        double temp_x = x;
-        double xval = this.move_positive?(temp_x+=this.momentum):(temp_x-=this.momentum);
-        temp_y = slope*xval + y_intercept;
-        y = (int)temp_y;
-        x = (int)temp_x;
+        x += velx;
+        y += vely;
     }
 
-    private void find_move_directions(int end_x , int end_y){
-        if (end_x - this.x == 0){
-            slope = 0;
+    private void set_move_vector(){
+        int wep_x = this.x;
+        int wep_y = this.y;
+
+        BaseActor target = get_target();
+        Point target_loc = target.getLocation();
+        int char_x = target_loc.x + target.getSize()/2;
+        int char_y = target_loc.y + target.getSize()/2;
+
+        double vX = char_x - wep_x;
+        double vY = char_y - wep_y;
+        double distance = Math.sqrt(vX * vX + vY * vY);
+
+        velx = vX / distance * momentum;
+        vely = vY / distance * momentum;
+
+        System.out.println(velx);
+        System.out.println(vely);
+    }
+
+    private BaseActor get_target(){
+        BaseActor target;
+        if (is_enemy){
+            target = spriteStateContainer.getMainCharacter();
         } else {
-            slope = ((double)end_y - (double)this.y) / ((double)end_x - (double)this.x);
+            target = spriteStateContainer.getSprites().get(0);
         }
-        move_positive = end_x > this.x? true : false;
-        this.y_intercept = this.y - slope * this.x;
+        return target;
     }
 }
