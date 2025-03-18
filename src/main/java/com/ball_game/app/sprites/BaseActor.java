@@ -13,6 +13,7 @@ public abstract class BaseActor extends BaseSprite{
     protected int size;
     protected boolean weapon_ready;
     protected int momentum;
+    protected int level;
 
     private SwingData swingData = SwingData.getInstance();
 
@@ -25,6 +26,7 @@ public abstract class BaseActor extends BaseSprite{
         this.health = 50;
         this.weapon_ready = true;
         this.momentum = momentum;
+        this.level = 5;
     } 
 
     protected void update_weapon(){
@@ -89,6 +91,10 @@ public abstract class BaseActor extends BaseSprite{
         return this.wdc.getWeapon_type();
     }
 
+    public int getLevel(){
+        return this.level;
+    }
+
     public int getHealth(){
         return this.health;
     }
@@ -96,5 +102,4 @@ public abstract class BaseActor extends BaseSprite{
     private void checkForDamage(){
         current_weapon.checkForDamage();
     }
-
 }

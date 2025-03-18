@@ -18,7 +18,7 @@ public class Enemy extends BaseActor {
         super(
             edc.getName() +"-"+String.valueOf(id_count),
             edc.getSpriteSize(),
-            3,
+            1,
             edc.getWeapon());
         this.character_ref = stateContainer.getMainCharacter();
         this.x = (int)start_x;
