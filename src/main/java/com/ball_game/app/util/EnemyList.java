@@ -19,12 +19,11 @@ public class EnemyList {
     UtilFunctions util = new UtilFunctions(swingData.getX(), swingData.getY());
     SpriteStateContainer spriteStateContainer = SpriteStateContainer.getInstance();
     Random rand = new Random();
-    Character main_character;
+    Character main_character = spriteStateContainer.getMainCharacter();
 
     int max_enemies = 1;
 
-    public Enemy[] createEnemies(Character main_character){
-        this.main_character = main_character;
+    public Enemy[] createEnemies(){
         int num_of_new_enemies = max_enemies;
         EnemyDataContainer new_enemy_data;
         Enemy new_enemy;
@@ -62,15 +61,13 @@ public class EnemyList {
     private Optional<EnemyDataContainer> getEnemyInfoByLevel(int level){
         ApiTransaction<EnemyDataContainer> enemy_container = new ApiTransaction<EnemyDataContainer>(
             "get",
-            "/enemy/level/random/5",
+            "/enemy/level/random/" + String.valueOf(level),
             EnemyDataContainer.class
         );
         EnemyDataContainer edc;
-        int needed_weapon_id;
         WeaponDataContainer weapon;
         try{
             edc = enemy_container.execute();
-            System.out.println(edc.getWeaponId());
 
         } catch(Exception e){
             System.out.println("error executing Enemy data get request");
@@ -79,8 +76,8 @@ public class EnemyList {
         }
 
         try{
-            needed_weapon_id = edc.getWeaponId();
-            weapon = getWeaponDataById(needed_weapon_id).get();
+            weapon = getWeaponDataByLevel(edc.getLevel()).get();
+            System.out.println(weapon.getName());
             edc.setWeapon(weapon);
         } 
         catch(Exception e){
@@ -91,11 +88,10 @@ public class EnemyList {
         return Optional.of(edc);
     }
 
-    private Optional<WeaponDataContainer> getWeaponDataById(int id){
-        String get_weapon_base_string = "/weapon/" + String.valueOf(id);
+    private Optional<WeaponDataContainer> getWeaponDataByLevel(int level){
         ApiTransaction<WeaponDataContainer> weapon_container = new ApiTransaction<WeaponDataContainer>(
             "get",
-            get_weapon_base_string,
+            "/weapon/random/enemy/" + String.valueOf(level),
             WeaponDataContainer.class
         );
         
@@ -131,5 +127,13 @@ public class EnemyList {
         for (Enemy e : enemies){
             e.draw(g);
         }
+    }
+
+    public boolean checkForAllEnemiesEliminated(){
+        this.enemies = this.enemies.stream().filter(e -> e.getHealth() > 0).toList();
+        if (this.enemies.size() != 0){
+            return false;
+        }
+        return true;
     }
 }
