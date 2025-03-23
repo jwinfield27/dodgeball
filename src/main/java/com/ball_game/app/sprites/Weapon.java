@@ -84,9 +84,9 @@ public class Weapon extends BaseSprite {
 
     public BaseActor getActorToDamage(){
         if (this.is_enemy){
-            return this.spriteStateContainer.getSprites().get(0);
+            return this.spriteStateContainer.getMainCharacter();
         }
-        return this.spriteStateContainer.getMainCharacter();
+        return this.spriteStateContainer.getSprites().get(0);
     }
 
     public void checkForDamage(){
@@ -113,7 +113,7 @@ public class Weapon extends BaseSprite {
         }
 
         if(takes_damage && !this.hasDealtDamage()){
-            actor_to_damage.takeDamage(level);
+            actor_to_damage.takeDamage(damage);
             this.setDeltDamage(true);
         }
         else {
