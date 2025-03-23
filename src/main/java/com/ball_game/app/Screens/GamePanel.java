@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         setPreferredSize(new Dimension(swingData.getX(), swingData.getY()));
         info_panel = new InfoPanel();
         this.add(info_panel);
-        enemy_list.createEnemies(main_character);
+        enemy_list.createEnemies();
         timer = new Timer(DELAY, this);
         timer.start();
     }
@@ -85,7 +85,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         enemy_list.draw(g);
         enemy_list.chase();
         info_panel.updateHealth();
-        checkPlayerHealth();
+        checkEntityHealth();
     }
 
     @Override
@@ -93,9 +93,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         repaint();
     }
 
-    private void checkPlayerHealth(){
+    private void checkEntityHealth(){
         if (main_character.getHealth() == 0) {
             launchEndScreen();
+        }
+        if (enemy_list.checkForAllEnemiesEliminated()){
+            enemy_list.createEnemies();
         }
     }
 
