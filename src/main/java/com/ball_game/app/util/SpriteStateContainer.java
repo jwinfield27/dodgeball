@@ -23,7 +23,6 @@ public class SpriteStateContainer {
     }
 
     public void addMainCharacter(Character character){
-        System.out.println("setting main character");
         main_character = character;
     }
 

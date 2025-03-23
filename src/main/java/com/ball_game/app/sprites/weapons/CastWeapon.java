@@ -45,9 +45,6 @@ public class CastWeapon extends DrawableWeapon{
 
         velx = vX / distance * momentum;
         vely = vY / distance * momentum;
-
-        System.out.println(velx);
-        System.out.println(vely);
     }
 
     private BaseActor get_target(){

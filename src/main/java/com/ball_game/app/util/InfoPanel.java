@@ -36,7 +36,6 @@ public class InfoPanel extends JLabel {
         String status_str = "<html> ";
         status_str = addCharStatusData(status_str);
         status_str = addEnemyStatusData(status_str);
-        System.out.println(status_str);
         return status_str;
     }
 
