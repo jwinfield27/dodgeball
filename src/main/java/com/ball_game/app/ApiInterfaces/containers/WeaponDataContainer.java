@@ -4,12 +4,8 @@ public class WeaponDataContainer {
     private int level;
     private String name;
     private int damage;
+    private int momentum;
     private String weapon_type;
-
-    public WeaponDataContainer(int level, String name) {
-        this.level = level;
-        this.name = name;
-    }
 
     public int getLevel() {
         return level;
@@ -41,5 +37,13 @@ public class WeaponDataContainer {
 
     public void setWeapon_type(String weapon_type) {
         this.weapon_type = weapon_type;
+    }
+
+    public int getMomentum(){
+        return this.momentum;
+    }
+
+    public void setMomentum(int momentum){
+        this.momentum = momentum;
     }
 }
