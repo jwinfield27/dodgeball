@@ -1,6 +1,7 @@
 package com.ball_game.app.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Optional;
@@ -19,11 +20,14 @@ public class EnemyList {
     UtilFunctions util = new UtilFunctions(swingData.getX(), swingData.getY());
     SpriteStateContainer spriteStateContainer = SpriteStateContainer.getInstance();
     Random rand = new Random();
-    Character main_character = spriteStateContainer.getMainCharacter();
+    Character main_character;
 
     int max_enemies = 1;
 
     public Enemy[] createEnemies(){
+        if (main_character == null){
+            this.addCharacterRef();
+        }
         int num_of_new_enemies = max_enemies;
         EnemyDataContainer new_enemy_data;
         Enemy new_enemy;
@@ -35,6 +39,10 @@ public class EnemyList {
         }
         Enemy[] en = new Enemy[enemies.size()];
         return enemies.toArray(en);
+    }
+
+    private void addCharacterRef(){
+        main_character = spriteStateContainer.getMainCharacter();
     }
 
     private EnemyDataContainer findEnemyData(){
@@ -130,10 +138,19 @@ public class EnemyList {
     }
 
     public boolean checkForAllEnemiesEliminated(){
-        this.enemies = this.enemies.stream().filter(e -> e.getHealth() > 0).toList();
+        Iterator<Enemy> iter_enemies = this.enemies.iterator(); 
+        while(iter_enemies.hasNext()){
+            Enemy enemy = iter_enemies.next();
+            if(enemy.getHealth() < 1){
+                spriteStateContainer.removeSpriteByName(enemy.getName());
+                iter_enemies.remove();
+            }
+        }
+
         if (this.enemies.size() != 0){
             return false;
         }
+       
         return true;
     }
 }

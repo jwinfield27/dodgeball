@@ -1,6 +1,7 @@
 package com.ball_game.app.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
 
 import com.ball_game.app.sprites.BaseActor;
@@ -49,6 +50,16 @@ public class SpriteStateContainer {
             System.exit(0);
         }
         return main_character;
+    }
+
+    public void removeSpriteByName(String name){
+        Iterator<BaseActor> sprite_iter = sprites.iterator();
+        while (sprite_iter.hasNext()){
+            BaseActor actor = sprite_iter.next();
+            if (actor.getName() == name){
+                sprite_iter.remove();
+            }
+        }
     }
 
 }
