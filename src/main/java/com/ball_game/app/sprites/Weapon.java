@@ -14,11 +14,25 @@ public class Weapon extends BaseSprite {
     private int momentum = 5;
     private int level;
     private int damage;
+    private int end_x = -1;
+    private int end_y = -1;
     private int damage_reset_cooldown_count;
     private String weapon_type;
     private boolean is_enemy;
     private boolean delt_damage = false;
     private DrawableWeapon draw_weapon;
+
+    public Weapon(boolean is_enemy, int caster_x, int caster_y, int end_x, int end_y, int level, int damage, String name, String weapon_type){
+        super(name+"-"+String.valueOf(id_count));
+        this.end_x = end_x;
+        this.end_y = end_y;
+        id_count++;
+        this.level = level;
+        this.damage = damage;
+        this.is_enemy = is_enemy;
+        this.weapon_type = weapon_type;
+        findDrawType(caster_x, caster_y, is_enemy);
+    }
 
     public Weapon(boolean is_enemy, int caster_x, int caster_y, int level, int damage, String name, String weapon_type) {
         super(name+"-"+String.valueOf(id_count));
@@ -32,7 +46,7 @@ public class Weapon extends BaseSprite {
 
     private void findDrawType(int x, int y, boolean is_enemy){
         this.draw_weapon = switch (weapon_type){
-            case "cast" -> new CastWeapon(x,y,momentum, is_enemy);
+            case "cast" -> new CastWeapon(x,y, this.end_x, this.end_y, momentum, is_enemy);
             default -> throw new IllegalArgumentException(
                 String.format("unsupported weapon type found %s", weapon_type));
         };
@@ -58,6 +72,10 @@ public class Weapon extends BaseSprite {
         return draw_weapon.getLocation();
     }
 
+    public Point getEndLocation(){
+        return new Point(end_x,end_y);
+    }
+
     public int getWeaponSize(){
         return draw_weapon.size;
     }
@@ -71,6 +89,10 @@ public class Weapon extends BaseSprite {
         if (this.delt_damage) {
             this.damage_reset_cooldown_count = this.damage_reset_cooldown_threshold;
         }
+    }
+
+    public boolean has_end_loc_set(){
+        return this.end_x != -1 && this.end_y != -1;
     }
 
     public void decreaseCooldowns(){

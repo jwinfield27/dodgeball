@@ -29,7 +29,7 @@ public class BaseActor extends BaseSprite{
         this.level = 5;
     } 
 
-    protected void update_weapon(){
+    public void update_weapon(){
         if (weapon_ready){
             createWeapon();
             weapon_ready = false;
@@ -49,7 +49,7 @@ public class BaseActor extends BaseSprite{
         }
     }
 
-    private void createWeapon() {
+    protected void createWeapon() {
         boolean is_enemy = this.getClass() == Enemy.class;
         current_weapon = new Weapon(
             is_enemy,

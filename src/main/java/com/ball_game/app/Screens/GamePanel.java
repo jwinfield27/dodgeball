@@ -41,6 +41,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         character_weapon = wdc.execute();
         main_character = new Character("test",50, 5, character_weapon);
         spriteStateContainer.addMainCharacter(main_character);
+        
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e){
+                main_character.lastClickLocation(e);
+            }
+        });
+        
         setPreferredSize(new Dimension(swingData.getX(), swingData.getY()));
         info_panel = new InfoPanel();
         this.add(info_panel);

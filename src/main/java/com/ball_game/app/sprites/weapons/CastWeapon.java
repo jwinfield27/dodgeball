@@ -12,11 +12,15 @@ public class CastWeapon extends DrawableWeapon{
 
     double velx;
     double vely;
+    int end_x;
+    int end_y;
     boolean is_enemy;
     int size = 10;
 
-    public CastWeapon(int x, int y, int momentum, boolean is_enemy){
+    public CastWeapon(int x, int y, int end_x, int end_y, int momentum, boolean is_enemy){
         super(x,y,momentum);
+        this.end_x = end_x;
+        this.end_y = end_y;
         this.is_enemy = is_enemy;
         set_move_vector();
     }
@@ -36,7 +40,7 @@ public class CastWeapon extends DrawableWeapon{
 
         BaseActor target = get_target();
         Point target_loc = target.getLocation();
-        int char_x = target_loc.x + target.getSize()/2;
+        int char_x = this.end_x + target.getSize()/2;
         int char_y = target_loc.y + target.getSize()/2;
 
         double vX = char_x - wep_x;

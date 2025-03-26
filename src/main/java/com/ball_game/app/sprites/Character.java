@@ -1,7 +1,7 @@
 package com.ball_game.app.sprites;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 import com.ball_game.app.ApiInterfaces.containers.WeaponDataContainer;
 import com.ball_game.app.util.SwingData;
@@ -16,6 +16,8 @@ public class Character extends BaseActor {
     public int level;
     public int max_x;
     public int max_y;
+
+    public MouseEvent last_click;
 
     private SwingData swingData = SwingData.getInstance();
 
@@ -45,6 +47,47 @@ public class Character extends BaseActor {
     public void keyReleased(KeyEvent event){
         int e = event.getKeyCode();
         this.changeCharacterDirection(e, false);
+    }
+
+    public void lastClickLocation(MouseEvent e){
+        this.last_click = e;
+    }
+
+    public void update_weapon(){
+        if (weapon_ready){
+            createWeapon();
+            if (this.last_click != null){
+                createWeaponWithClickLocation();
+            }
+            weapon_ready = false;
+        }
+        else if (current_weapon != null){
+            current_weapon.update();
+        }
+
+        Point weapon_loc = this.current_weapon.getLocation();
+        if (
+            weapon_loc.x < 0 ||
+            weapon_loc.y < 0 ||
+            weapon_loc.x > swingData.getX() ||
+            weapon_loc.y > swingData.getY()
+        ){
+            this.cleanup_weapon();
+        }
+    }
+
+    public void createWeaponWithClickLocation(){
+        current_weapon = new Weapon(
+            false,
+            x+this.size/2,
+            y+this.size/2,
+            this.last_click.getX(),
+            this.last_click.getY(),
+            wdc.getLevel(),
+            wdc.getDamage(),
+            wdc.getName(),
+            wdc.getWeapon_type()
+        );
     }
 
     private void changeCharacterDirection(int e, boolean value){
